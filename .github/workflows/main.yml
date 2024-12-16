@@ -1,0 +1,38 @@
+name: Run Apache Server
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  run-apache:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install Apache Server
+      run: |
+        sudo apt-get update
+        sudo apt-get install apache2 -y
+
+    - name: Debug repository structure
+      run: |
+        echo "Checking repository structure:"
+        ls -R
+
+    - name: Deploy website
+      run: |
+        sudo cp ./index.html /var/www/html/
+       
+
+    - name: Start Apache server
+      run: |
+        sudo systemctl start apache2
+        sudo systemctl status apache2
+
+    - name: Test Apache server
+      run: curl http://localhost
